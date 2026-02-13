@@ -1,2 +1,2 @@
-# miniatam
+#Calculator
 college project
