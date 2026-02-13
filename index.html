@@ -1,882 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini ATM - Banking Simulation</title>
-  <meta name="description" content="A browser-based Mini ATM simulation demonstrating essential banking features like authentication, deposits, withdrawals, and secure operations.">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- React and ReactDOM -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  
-  <!-- Babel Standalone for JSX -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <style>
-    body {
-    
-      font-family: 'Inter', system-ui, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    
-    .font-mono {
-      font-family: 'Roboto Mono', monospace;
-    }
-    
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: #dad6d6;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 4px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-    
-    /* Modal backdrop */
-    .modal-backdrop {
-      background-color: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-    }
-    
-    /* Animations */
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate-slide-in {
-      animation: slideIn 0.2s ease-out;
-    }
-  </style>
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: {
-              DEFAULT: '#2563eb',
-              foreground: '#ffffff',
-            },
-            secondary: {
-              DEFAULT: '#e2e8f0',
-              foreground: '#1e293b',
-            },
-            destructive: {
-              DEFAULT: '#dc2626',
-              foreground: '#ffffff',
-            },
-            muted: {
-              DEFAULT: '#f1f5f9',
-              foreground: '#64748b',
-            },
-            card: {
-              DEFAULT: '#ffffff',
-              foreground: '#1e293b',
-            },
-            border: '#e2e8f0',
-          },
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-            mono: ['Roboto Mono', 'monospace'],
-          },
-        },
-      },
-    }
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+ <style>
+    body
+{
+background-color: aqua;
+}
+.calc{
+    margin: 10% 40%;
+    height: 400px;
+    width: 200px;
+    background-color: rgb(230, 227, 227);
+    border: 5px solid black;
+    border-radius: 30px;
+}
+#screen
+{
+color: white;
+margin: 20px 6px;
+height: 40px;
+width: 90%;
+border: 2px solid grey;
+background-color: rgb(148, 146, 146);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.2rem;
+box-shadow: 0px 0px 20px white;
+}
+#dialpad
+{
+ margin-left: 3px;
+height: 300px;
+width: 95%;
+border: 2px solid black;
+background-color: rgb(39, 21, 21);
+ border-radius: 20px;
+display: flex;
+flex-wrap: wrap;
+}
+#dialpad button{
+    border-radius: 2px;
+    padding: 10px;
+  margin-top: 10px;
+  margin-left: 15px;
+    height: 40px;
+    width: 40px;
+    border: 1px solid white;
+    color: black;
+    background-color: grey;
+    font-weight: 600;
+}
+button:hover{
+    color: blueviolet;
+}
+ </style>
 </head>
 <body>
-  <div id="root"></div>
+    <div class="calc">
+    <input type="text" id="screen" disabled>
+    <div id="dialpad">
+        <button class="number" onclick="appendnumber('7')">7</button>
+        <button class="number" onclick="appendnumber('8')">8</button>
+        <button class="number" onclick="appendnumber('9')">9</button>
+        <button class="number" onclick="appendnumber('4')">4</button>
+        <button class="number" onclick="appendnumber('5')">5</button>
+        <button class="number" onclick="appendnumber('6')">6</button>
+        <button class="number" onclick="appendnumber('3')">3</button>
+        <button class="number" onclick="appendnumber('2')">2</button>
+        <button class="number" onclick="appendnumber('1')">1</button>
+        <button class="equals" onclick="Calculate()">=</button>
+        <button class="operator" onclick="appendoperator('*')">*</button>
+        <button class="operator" onclick="appendoperator('+')">+</button>
+        <button class="operator" onclick="appendoperator('-')">-</button>
+         <button class="clea" onclick="clearDisplay()">c</button>
+    </div>
+    </div>
+   <script>
+    let y=document.getElementById("screen");
 
-  <script type="text/babel">
-    const { useState, useEffect } = React;
+function appendnumber(num)
+{
+    y.value+=num;
+}
+function appendoperator(operator)
+{
+    y.value+=operator;
+}
 
-    // Storage keys
-    const STORAGE_KEYS = {
-      PIN: 'mini-atm-pin',
-      BALANCE: 'mini-atm-balance',
-      TRANSACTIONS: 'mini-atm-transactions',
-      IS_AUTHENTICATED: 'mini-atm-authenticated',
-    };
+function Calculate()
+{
+   try{
+    y.value=eval(y.value);
+   }
+   catch(error){
+    y.value='error';
+   }
+   
+}
+function clearDisplay()
+{
+    y.value='';
+}
 
-    // Toast notification component
-    function Toast({ message, type = 'success', onClose }) {
-      useEffect(() => {
-        const timer = setTimeout(onClose, 3000);
-        return () => clearTimeout(timer);
-      }, [onClose]);
-
-      const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-
-      return (
-        <div className={`fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-in`}>
-          {message}
-        </div>
-      );
-    }
-
-    // PIN Login Component
-    function PINLogin({ onLogin, error }) {
-      const [pin, setPin] = useState('');
-
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        if (pin.length === 4) {
-          onLogin(pin);
-        }
-      };
-
-      return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
-          <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-            <div className="text-center space-y-4 mb-8">
-              <div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center">
-                <i data-lucide="lock" className="w-8 h-8 text-white"></i>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Mini ATM</h1>
-                <p className="text-gray-600 mt-2">Enter your 4-digit PIN to access your account</p>
-              </div>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <input
-                  type="password"
-                  inputMode="numeric"
-                  maxLength={4}
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
-                  className="w-full text-center text-4xl tracking-widest h-16 font-mono border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
-                  placeholder="••••"
-                  autoFocus
-                />
-                {error && (
-                  <p className="text-sm text-red-600 text-center">{error}</p>
-                )}
-              </div>
-              <button
-                type="submit"
-                className="w-full py-4 text-lg font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                disabled={pin.length !== 4}
-              >
-                Login
-              </button>
-              <p className="text-sm text-gray-500 text-center">
-                Default PIN: 1234
-              </p>
-            </form>
-          </div>
-        </div>
-      );
-    }
-
-    // Balance Card Component
-    function BalanceCard({ balance, lastUpdated }) {
-      return (
-        <div className="bg-white rounded-lg shadow-lg p-8 border-2 border-gray-200">
-          <p className="text-sm uppercase tracking-wide text-gray-500 mb-2">
-            Current Balance
-          </p>
-          <p className="text-6xl font-bold font-mono">
-            ${balance.toFixed(2)}
-          </p>
-          {lastUpdated && (
-            <p className="text-xs text-gray-500 mt-4">
-              Last updated: {lastUpdated.toLocaleTimeString()}
-            </p>
-          )}
-        </div>
-      );
-    }
-
-    // Numeric Keypad Component
-    function NumericKeypad({ onNumberClick, onClear, onEnter, disabled }) {
-      const buttons = [
-        '1', '2', '3',
-        '4', '5', '6',
-        '7', '8', '9',
-        'Clear', '0', 'Enter'
-      ];
-
-      const handleClick = (value) => {
-        if (disabled) return;
-        
-        if (value === 'Clear') {
-          onClear();
-        } else if (value === 'Enter') {
-          onEnter();
-        } else {
-          onNumberClick(value);
-        }
-      };
-
-      return (
-        <div className="grid grid-cols-3 gap-4">
-          {buttons.map((btn) => {
-            const isEnter = btn === 'Enter';
-            const isClear = btn === 'Clear';
-            const baseClass = 'min-h-16 rounded-lg font-bold transition-colors';
-            const variant = isEnter 
-              ? 'bg-blue-600 text-white hover:bg-blue-700' 
-              : isClear 
-              ? 'bg-gray-200 text-gray-900 hover:bg-gray-300' 
-              : 'bg-white border-2 border-gray-300 hover:bg-gray-50';
-            const textSize = isEnter || isClear ? 'text-lg' : 'text-3xl';
-            
-            return (
-              <button
-                key={btn}
-                onClick={() => handleClick(btn)}
-                disabled={disabled}
-                className={`${baseClass} ${variant} ${textSize} disabled:opacity-50`}
-              >
-                {isClear ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <i data-lucide="delete" className="w-5 h-5"></i> Clear
-                  </span>
-                ) : (
-                  btn
-                )}
-              </button>
-            );
-          })}
-        </div>
-      );
-    }
-
-    // Quick Amount Buttons Component
-    function QuickAmountButtons({ amounts, onAmountClick, disabled }) {
-      return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {amounts.map((amount) => (
-            <button
-              key={amount}
-              onClick={() => onAmountClick(amount)}
-              disabled={disabled}
-              className="py-3 text-lg font-semibold bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 disabled:opacity-50 transition-colors"
-            >
-              ${amount}
-            </button>
-          ))}
-        </div>
-      );
-    }
-
-    // Transaction History Component
-    function TransactionHistory({ transactions }) {
-      if (transactions.length === 0) {
-        return (
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <i data-lucide="clock" className="w-5 h-5"></i>
-              Transaction History
-            </h2>
-            <p className="text-center text-gray-500 py-8">No transactions yet</p>
-          </div>
-        );
-      }
-
-      return (
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-            <i data-lucide="clock" className="w-5 h-5"></i>
-            Transaction History
-          </h2>
-          <div className="max-h-96 overflow-y-auto">
-            <div className="space-y-0">
-              {transactions.map((transaction, index) => (
-                <div
-                  key={transaction.id}
-                  className={`py-4 flex items-center justify-between gap-4 ${
-                    index !== transactions.length - 1 ? 'border-b' : ''
-                  } ${transaction.status === 'failed' ? 'border-l-4 border-l-red-600 pl-4' : ''}`}
-                >
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      transaction.status === 'failed'
-                        ? 'bg-red-100'
-                        : transaction.type === 'deposit'
-                        ? 'bg-blue-100'
-                        : 'bg-gray-100'
-                    }`}>
-                      <i 
-                        data-lucide={
-                          transaction.status === 'failed' 
-                            ? 'x-circle' 
-                            : transaction.type === 'deposit' 
-                            ? 'arrow-down' 
-                            : 'arrow-up'
-                        } 
-                        className={`w-4 h-4 ${
-                          transaction.status === 'failed'
-                            ? 'text-red-600'
-                            : transaction.type === 'deposit'
-                            ? 'text-blue-600'
-                            : 'text-gray-900'
-                        }`}
-                      ></i>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold">
-                        {transaction.type === 'deposit' ? 'Deposit' : 'Withdrawal'}
-                        {transaction.status === 'failed' && ' (Failed)'}
-                      </p>
-                      {transaction.reason && (
-                        <p className="text-sm text-gray-500">{transaction.reason}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className={`font-semibold font-mono ${
-                      transaction.status === 'failed'
-                        ? 'text-gray-500 line-through'
-                        : transaction.type === 'deposit'
-                        ? 'text-blue-600'
-                        : 'text-gray-900'
-                    }`}>
-                      {transaction.type === 'deposit' ? '+' : '-'}${transaction.amount.toFixed(2)}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {transaction.timestamp.toLocaleTimeString()}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Modal Component
-    function Modal({ open, onClose, title, children }) {
-      if (!open) return null;
-
-      return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" onClick={onClose}>
-          <div 
-            className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-slide-in"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-xl font-bold mb-4">{title}</h2>
-            {children}
-          </div>
-        </div>
-      );
-    }
-
-    // Main ATM Dashboard Component
-    function ATMDashboard({ onLogout }) {
-      const [balance, setBalance] = useState(() => {
-        const saved = localStorage.getItem(STORAGE_KEYS.BALANCE);
-        return saved ? parseFloat(saved) : 1000;
-      });
-      
-      const [transactions, setTransactions] = useState(() => {
-        const saved = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
-        return saved ? JSON.parse(saved) : [];
-      });
-      
-      const [lastUpdated, setLastUpdated] = useState(new Date());
-      const [currentAction, setCurrentAction] = useState(null);
-      const [amount, setAmount] = useState('');
-      const [pin, setPin] = useState(() => {
-        return localStorage.getItem(STORAGE_KEYS.PIN) || '1234';
-      });
-      
-      const [changePINOpen, setChangePINOpen] = useState(false);
-      const [exportOpen, setExportOpen] = useState(false);
-      const [resetDialogOpen, setResetDialogOpen] = useState(false);
-      const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-      
-      const [currentPIN, setCurrentPIN] = useState('');
-      const [newPIN, setNewPIN] = useState('');
-      const [confirmPIN, setConfirmPIN] = useState('');
-      const [pinError, setPinError] = useState('');
-      
-      const [toast, setToast] = useState(null);
-
-      // Save to localStorage
-      useEffect(() => {
-        localStorage.setItem(STORAGE_KEYS.BALANCE, balance.toString());
-      }, [balance]);
-
-      useEffect(() => {
-        localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(transactions));
-      }, [transactions]);
-
-      useEffect(() => {
-        localStorage.setItem(STORAGE_KEYS.PIN, pin);
-      }, [pin]);
-
-      // Initialize Lucide icons
-      useEffect(() => {
-        lucide.createIcons();
-      });
-
-      const showToast = (message, type = 'success') => {
-        setToast({ message, type });
-      };
-
-      const handleNumberClick = (num) => {
-        if (amount.length < 8) {
-          setAmount(amount + num);
-        }
-      };
-
-      const handleClear = () => {
-        setAmount('');
-      };
-
-      const handleQuickAmount = (quickAmount) => {
-        setAmount(quickAmount.toString());
-      };
-
-      const handleEnter = () => {
-        const numAmount = parseFloat(amount);
-        
-        if (!numAmount || numAmount <= 0) {
-          showToast('Please enter a valid amount', 'error');
-          return;
-        }
-
-        if (currentAction === 'withdrawal' && numAmount > balance) {
-          const transaction = {
-            id: Date.now().toString(),
-            type: 'withdrawal',
-            amount: numAmount,
-            timestamp: new Date(),
-            status: 'failed',
-            reason: 'Insufficient funds',
-          };
-          setTransactions([transaction, ...transactions]);
-          showToast('Insufficient funds for this withdrawal', 'error');
-          setAmount('');
-          return;
-        }
-
-        const newBalance = currentAction === 'deposit' 
-          ? balance + numAmount 
-          : balance - numAmount;
-
-        const transaction = {
-          id: Date.now().toString(),
-          type: currentAction,
-          amount: numAmount,
-          timestamp: new Date(),
-          status: 'success',
-        };
-
-        setBalance(newBalance);
-        setTransactions([transaction, ...transactions]);
-        setLastUpdated(new Date());
-        setAmount('');
-        setCurrentAction(null);
-        showToast(`${currentAction === 'deposit' ? 'Deposited' : 'Withdrew'} $${numAmount.toFixed(2)}`);
-      };
-
-      const handleChangePIN = (e) => {
-        e.preventDefault();
-        setPinError('');
-
-        if (currentPIN.length !== 4) {
-          setPinError('Current PIN must be 4 digits');
-          return;
-        }
-
-        if (currentPIN !== pin) {
-          setPinError('Current PIN is incorrect');
-          return;
-        }
-
-        if (newPIN.length !== 4) {
-          setPinError('New PIN must be 4 digits');
-          return;
-        }
-
-        if (newPIN !== confirmPIN) {
-          setPinError('New PINs do not match');
-          return;
-        }
-
-        setPin(newPIN);
-        setChangePINOpen(false);
-        setCurrentPIN('');
-        setNewPIN('');
-        setConfirmPIN('');
-        showToast('Your PIN has been updated successfully');
-      };
-
-      const handleReset = () => {
-        setBalance(1000);
-        setTransactions([]);
-        setPin('1234');
-        setLastUpdated(new Date());
-        setAmount('');
-        setCurrentAction(null);
-        setResetDialogOpen(false);
-        showToast('Your account has been reset to default values');
-      };
-
-      const handleExport = () => {
-        const data = {
-          balance,
-          pin: '****',
-          transactionCount: transactions.length,
-          transactions: transactions.map(t => ({
-            type: t.type,
-            amount: t.amount,
-            timestamp: t.timestamp,
-            status: t.status,
-          })),
-          lastUpdated: lastUpdated.toISOString(),
-        };
-        
-        const jsonData = JSON.stringify(data, null, 2);
-        navigator.clipboard.writeText(jsonData);
-        showToast('Data copied to clipboard');
-        setExportOpen(false);
-      };
-
-      return (
-        <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-          <div className="max-w-4xl mx-auto space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between py-6 border-b-2">
-              <div>
-                <h1 className="text-2xl font-bold">Mini ATM</h1>
-                <p className="text-sm text-gray-500">Account: ****1234</p>
-              </div>
-              <button
-                className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors"
-                onClick={() => setLogoutDialogOpen(true)}
-              >
-                <i data-lucide="power" className="w-4 h-4"></i>
-                Logout
-              </button>
-            </div>
-
-            {/* Balance Display */}
-            <BalanceCard balance={balance} lastUpdated={lastUpdated} />
-
-            {/* Action Buttons or Transaction Interface */}
-            {!currentAction ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button
-                  className="py-6 flex flex-col items-center gap-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                  onClick={() => setCurrentAction('deposit')}
-                >
-                  <i data-lucide="banknote" className="w-8 h-8"></i>
-                  <span className="font-semibold">Deposit</span>
-                </button>
-                <button
-                  className="py-6 flex flex-col items-center gap-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                  onClick={() => setCurrentAction('withdrawal')}
-                >
-                  <i data-lucide="arrow-down-to-line" className="w-8 h-8"></i>
-                  <span className="font-semibold">Withdraw</span>
-                </button>
-                <button
-                  className="py-6 flex flex-col items-center gap-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                  onClick={() => setChangePINOpen(true)}
-                >
-                  <i data-lucide="lock" className="w-8 h-8"></i>
-                  <span className="font-semibold">Change PIN</span>
-                </button>
-                <button
-                  className="py-6 flex flex-col items-center gap-2 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                  onClick={() => setExportOpen(true)}
-                >
-                  <i data-lucide="file-text" className="w-8 h-8"></i>
-                  <span className="font-semibold">Export Data</span>
-                </button>
-              </div>
-            ) : (
-              <div className="bg-white rounded-lg shadow-lg p-8 space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold">
-                    {currentAction === 'deposit' ? 'Deposit' : 'Withdraw'} Funds
-                  </h2>
-                  <button
-                    className="px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors"
-                    onClick={() => {
-                      setCurrentAction(null);
-                      setAmount('');
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-
-                {/* Amount Display */}
-                <div className="text-center">
-                  <p className="text-sm text-gray-500 mb-2">Enter Amount</p>
-                  <p className="text-5xl font-bold font-mono min-h-20 flex items-center justify-center">
-                    ${amount || '0'}
-                  </p>
-                </div>
-
-                {/* Quick Amount Buttons */}
-                <QuickAmountButtons
-                  amounts={[20, 50, 100, 200]}
-                  onAmountClick={handleQuickAmount}
-                />
-
-                {/* Numeric Keypad */}
-                <NumericKeypad
-                  onNumberClick={handleNumberClick}
-                  onClear={handleClear}
-                  onEnter={handleEnter}
-                />
-              </div>
-            )}
-
-            {/* Reset Button */}
-            {!currentAction && (
-              <button
-                className="w-full py-6 flex items-center justify-center gap-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                onClick={() => setResetDialogOpen(true)}
-              >
-                <i data-lucide="refresh-cw" className="w-5 h-5"></i>
-                <span className="font-semibold">Reset Account</span>
-              </button>
-            )}
-
-            {/* Transaction History */}
-            <TransactionHistory transactions={transactions} />
-
-            {/* Change PIN Modal */}
-            {changePINOpen && (
-              <Modal open={changePINOpen} onClose={() => setChangePINOpen(false)} title="Change PIN">
-                <form onSubmit={handleChangePIN} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Current PIN</label>
-                    <input
-                      type="password"
-                      inputMode="numeric"
-                      maxLength={4}
-                      value={currentPIN}
-                      onChange={(e) => setCurrentPIN(e.target.value.replace(/\D/g, ''))}
-                      className="w-full text-center text-2xl tracking-widest font-mono border-2 border-gray-300 rounded-lg p-2 focus:border-blue-600 focus:outline-none"
-                      placeholder="••••"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">New PIN</label>
-                    <input
-                      type="password"
-                      inputMode="numeric"
-                      maxLength={4}
-                      value={newPIN}
-                      onChange={(e) => setNewPIN(e.target.value.replace(/\D/g, ''))}
-                      className="w-full text-center text-2xl tracking-widest font-mono border-2 border-gray-300 rounded-lg p-2 focus:border-blue-600 focus:outline-none"
-                      placeholder="••••"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Confirm New PIN</label>
-                    <input
-                      type="password"
-                      inputMode="numeric"
-                      maxLength={4}
-                      value={confirmPIN}
-                      onChange={(e) => setConfirmPIN(e.target.value.replace(/\D/g, ''))}
-                      className="w-full text-center text-2xl tracking-widest font-mono border-2 border-gray-300 rounded-lg p-2 focus:border-blue-600 focus:outline-none"
-                      placeholder="••••"
-                    />
-                  </div>
-                  {pinError && <p className="text-sm text-red-600">{pinError}</p>}
-                  <div className="grid grid-cols-2 gap-3 pt-2">
-                    <button
-                      type="button"
-                      className="py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors"
-                      onClick={() => {
-                        setChangePINOpen(false);
-                        setCurrentPIN('');
-                        setNewPIN('');
-                        setConfirmPIN('');
-                        setPinError('');
-                      }}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      Change PIN
-                    </button>
-                  </div>
-                </form>
-              </Modal>
-            )}
-
-            {/* Export Modal */}
-            {exportOpen && (
-              <Modal open={exportOpen} onClose={() => setExportOpen(false)} title="Export Account Data">
-                <p className="text-sm text-gray-600 mb-4">Your account data is ready to be copied</p>
-                <button
-                  onClick={handleExport}
-                  className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-                >
-                  <i data-lucide="copy" className="w-4 h-4"></i>
-                  Copy to Clipboard
-                </button>
-              </Modal>
-            )}
-
-            {/* Reset Confirmation */}
-            {resetDialogOpen && (
-              <Modal open={resetDialogOpen} onClose={() => setResetDialogOpen(false)} title="">
-                <div className="text-center">
-                  <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                    <i data-lucide="alert-triangle" className="w-6 h-6 text-red-600"></i>
-                  </div>
-                  <h3 className="text-lg font-bold mb-2">Reset Account?</h3>
-                  <p className="text-gray-600 mb-6">
-                    This will reset your balance and transaction history to default values. This action cannot be undone.
-                  </p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      className="py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors"
-                      onClick={() => setResetDialogOpen(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      className="py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                      onClick={handleReset}
-                    >
-                      Reset
-                    </button>
-                  </div>
-                </div>
-              </Modal>
-            )}
-
-            {/* Logout Confirmation */}
-            {logoutDialogOpen && (
-              <Modal open={logoutDialogOpen} onClose={() => setLogoutDialogOpen(false)} title="">
-                <div className="text-center">
-                  <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                    <i data-lucide="alert-triangle" className="w-6 h-6 text-red-600"></i>
-                  </div>
-                  <h3 className="text-lg font-bold mb-2">Logout?</h3>
-                  <p className="text-gray-600 mb-6">
-                    Are you sure you want to logout from your account?
-                  </p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      className="py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition-colors"
-                      onClick={() => setLogoutDialogOpen(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      className="py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      onClick={() => {
-                        setLogoutDialogOpen(false);
-                        onLogout();
-                      }}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </div>
-              </Modal>
-            )}
-          </div>
-
-          {/* Toast Notification */}
-          {toast && (
-            <Toast
-              message={toast.message}
-              type={toast.type}
-              onClose={() => setToast(null)}
-            />
-          )}
-        </div>
-      );
-    }
-
-    // Main App Component
-    function App() {
-      const [isAuthenticated, setIsAuthenticated] = useState(false);
-      const [loginError, setLoginError] = useState('');
-      const [storedPIN, setStoredPIN] = useState('1234');
-
-      useEffect(() => {
-        const savedPIN = localStorage.getItem(STORAGE_KEYS.PIN);
-        const isAuth = localStorage.getItem(STORAGE_KEYS.IS_AUTHENTICATED);
-        
-        if (savedPIN) {
-          setStoredPIN(savedPIN);
-        }
-        
-        if (isAuth === 'true') {
-          setIsAuthenticated(true);
-        }
-
-        // Initialize Lucide icons
-        lucide.createIcons();
-      }, []);
-
-      useEffect(() => {
-        lucide.createIcons();
-      });
-
-      const handleLogin = (pin) => {
-        if (pin === storedPIN) {
-          setIsAuthenticated(true);
-          localStorage.setItem(STORAGE_KEYS.IS_AUTHENTICATED, 'true');
-          setLoginError('');
-        } else {
-          setLoginError('Invalid PIN. Please try again.');
-        }
-      };
-
-      const handleLogout = () => {
-        setIsAuthenticated(false);
-        localStorage.setItem(STORAGE_KEYS.IS_AUTHENTICATED, 'false');
-      };
-
-      return isAuthenticated ? (
-        <ATMDashboard onLogout={handleLogout} />
-      ) : (
-        <PINLogin onLogin={handleLogin} error={loginError} />
-      );
-    }
-
-    // Render the app
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
+   </script>
 </body>
 </html>
