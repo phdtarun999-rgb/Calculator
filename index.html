@@ -1,111 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
- <style>
-    body
-{
-background-color: aqua;
-}
-.calc{
-    margin: 10% 40%;
-    height: 400px;
-    width: 200px;
-    background-color: rgb(230, 227, 227);
-    border: 5px solid black;
-    border-radius: 30px;
-}
-#screen
-{
-color: white;
-margin: 20px 6px;
-height: 40px;
-width: 90%;
-border: 2px solid grey;
-background-color: rgb(148, 146, 146);
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 1.2rem;
-box-shadow: 0px 0px 20px white;
-}
-#dialpad
-{
- margin-left: 3px;
-height: 300px;
-width: 95%;
-border: 2px solid black;
-background-color: rgb(39, 21, 21);
- border-radius: 20px;
-display: flex;
-flex-wrap: wrap;
-}
-#dialpad button{
-    border-radius: 2px;
-    padding: 10px;
-  margin-top: 10px;
-  margin-left: 15px;
-    height: 40px;
-    width: 40px;
-    border: 1px solid white;
-    color: black;
-    background-color: grey;
-    font-weight: 600;
-}
-button:hover{
-    color: blueviolet;
-}
- </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> To-Do App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1ac0e6, #c471ed, #ea303c);
+      color: #333;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #box {
+      height: auto;
+      min-height: 150px;
+      width: 500px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      flex-direction: column;
+    }
+
+    #add {
+      height: 45px;
+      width: 80%;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      padding: 0 10px;
+      text-align: center;
+      outline: none;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    #btn {
+      margin-top: 20px;
+      height: 45px;
+      width: 120px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #185a9d, #43cea2);
+    }
+
+    .foot {
+      margin-top: 40px;
+      height: 300px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+     overflow-y: auto;
+    }
+
+    .foot div {
+      height: 45px;
+      width: 400px;
+      background: white;
+      border-radius: 10px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+      animation: fadeIn 0.4s ease-in;
+    }
+
+    .foot div:hover {
+      background: #ffb3b3;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .delete-btn {
+      position: absolute;
+      right: 15px;
+      background: crimson;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .delete-btn:hover {
+      background: darkred;
+    }
+  </style>
 </head>
 <body>
-    <div class="calc">
-    <input type="text" id="screen" disabled>
-    <div id="dialpad">
-        <button class="number" onclick="appendnumber('7')">7</button>
-        <button class="number" onclick="appendnumber('8')">8</button>
-        <button class="number" onclick="appendnumber('9')">9</button>
-        <button class="number" onclick="appendnumber('4')">4</button>
-        <button class="number" onclick="appendnumber('5')">5</button>
-        <button class="number" onclick="appendnumber('6')">6</button>
-        <button class="number" onclick="appendnumber('3')">3</button>
-        <button class="number" onclick="appendnumber('2')">2</button>
-        <button class="number" onclick="appendnumber('1')">1</button>
-        <button class="equals" onclick="Calculate()">=</button>
-        <button class="operator" onclick="appendoperator('*')">*</button>
-        <button class="operator" onclick="appendoperator('+')">+</button>
-        <button class="operator" onclick="appendoperator('-')">-</button>
-         <button class="clea" onclick="clearDisplay()">c</button>
+  <main id="main">
+    <div id="box">
+      <input type="text" placeholder="Write your task..." id="add" />
+      <button id="btn">ADD</button>
     </div>
-    </div>
-   <script>
-    let y=document.getElementById("screen");
+  </main>
+  <footer class="foot"><h1>Your List</h1></footer>
 
-function appendnumber(num)
-{
-    y.value+=num;
-}
-function appendoperator(operator)
-{
-    y.value+=operator;
-}
+  <script>
+    const todoadder = document.getElementById("add");
+    const addBtn = document.getElementById("btn");
+    const footer = document.querySelector(".foot");
+    const box = document.getElementById("box");
+    addBtn.addEventListener("click", () => {
+      const taskText = todoadder.value.trim();
+      if (taskText === "") return;
+ 
+      const task = document.createElement("div");
+      task.textContent = taskText;
 
-function Calculate()
-{
-   try{
-    y.value=eval(y.value);
-   }
-   catch(error){
-    y.value='error';
-   }
-   
-}
-function clearDisplay()
-{
-    y.value='';
-}
+      // Delete button
+      const del = document.createElement("button");
+      del.textContent = "×";
+      del.classList.add("delete-btn");
+      del.onclick = () => task.remove();
 
-   </script>
+      task.appendChild(del);
+      footer.appendChild(task);
+      todoadder.value = "";
+    });
+
+    todoadder.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") addBtn.click();
+    });
+  </script>
 </body>
 </html>
